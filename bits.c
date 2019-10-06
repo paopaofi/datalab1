@@ -228,11 +228,11 @@ int isLessOrEqual(int x, int y) {
   int mask = x^y;
   mask |= mask >> 16;
   mask |= mask >> 8;
-  mask |= mask >> 4;
+  mask |= mask >> 4;O
   mask |= mask >> 2;
   mask |= mask >> 1;
   mask ^= mask >> 1;
-  return !(mask & x);
+  return !(mask & x ^ 0x80000000);
 }
 //4
 /* 
