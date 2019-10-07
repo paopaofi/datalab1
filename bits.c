@@ -165,7 +165,7 @@ int tmin(void) {
  *   Rating: 1
  */
 int isTmax(int x) {
-  return !(x + 1 ^ ~x);
+  return !(~(x + 1) + 1 ^ x + 1) & !!(x + 1);
 }
 /* 
  * allOddBits - return 1 if all odd-numbered bits in word set to 1
@@ -176,7 +176,7 @@ int isTmax(int x) {
  *   Rating: 2
  */
 int allOddBits(int x) {
-  int y = 0xAA + (0xAA >> 8) + (0xAA >> 16) +(0xAA >> 24);
+  int y = 0xAA + (0xAA << 8) + (0xAA << 16) +(0xAA << 24);
   int z = x & y;
   return !(z^y);
 }
@@ -215,7 +215,7 @@ int isAsciiDigit(int x) {
  *   Rating: 3
  */
 int conditional(int x, int y, int z) {
-  return ~!!x + 1 & y + ~!x + 1 & z;
+  return (~!!x + 1 & y) + (~!x + 1 & z);
 }
 /* 
  * isLessOrEqual - if x <= y  then return 1, else return 0 
@@ -225,14 +225,16 @@ int conditional(int x, int y, int z) {
  *   Rating: 3
  */
 int isLessOrEqual(int x, int y) {
-  int mask = x^y;
-  mask |= mask >> 16;
-  mask |= mask >> 8;
-  mask |= mask >> 4;O
-  mask |= mask >> 2;
-  mask |= mask >> 1;
-  mask ^= mask >> 1;
-  return !(mask & x ^ 0x80000000);
+    int mask = x^y;
+    int sign_x = x >> 31;
+    int sign_diff = mask >> 31;
+    mask |= mask >> 16;
+    mask |= mask >> 8;
+    mask |= mask >> 4;
+    mask |= mask >> 2;
+    mask |= mask >> 1;
+    mask ^= mask >> 1;
+    return !(mask & x | sign_diff & (sign_diff ^ sign_x));
 }
 //4
 /* 
@@ -249,7 +251,7 @@ int logicalNeg(int x) {
   x |= x >> 4;
   x |= x >> 2;
   x |= x >> 1;
-  return x & 0x01;
+  return ~x & 0x01;
 }
 /* howManyBits - return the minimum number of bits required to represent x in
  *             two's complement
@@ -311,14 +313,14 @@ int howManyBits(int x) {
  *   Rating: 4
  */
 unsigned floatScale2(unsigned uf) {
-  int exp = (uf & 0x7FF80000) >> 23;
+  int exp = (uf & 0x7F800000) >> 23;
   int sign = uf & 0x80000000;
   if (exp == 0x00000000)
     return (uf << 1) + sign;
-  else if (exp == 0x00000FFF)
+  else if (exp == 0x000000FF)
     return uf;
   else
-    return uf + 0x00080000;
+    return uf + 0x00800000;
 }
 /* 
  * floatFloat2Int - Return bit-level equivalent of expression (int) f
@@ -333,22 +335,22 @@ unsigned floatScale2(unsigned uf) {
  *   Rating: 4
  */
 int floatFloat2Int(unsigned uf) {
-  int exp = (uf & 0x7FF80000) >> 23;
-  int t = 23 - exp;
+  int exp = (uf & 0x7F800000) >> 23;
+  int t = 23 - exp + 127;
   int sign = uf & 0x80000000;
-  int frac = (uf & 0x0007FFFF) + 0x0008FFFF;
+  int frac = (uf & 0x007FFFFF) + 0x00800000;
   int result;
-  if (exp < 0x00000800)
+  if (exp < 0x0000007F)
     return 0;
-  else if (exp > 0x0000001E)
-    return 0x8000000u;
+  else if (exp > 0x0000009D)
+    return 0x80000000u;
   else {
     if (t < 0) {
-      result = frac >> -t;
+      result = frac << -t;
       return (sign == 0 ? result : ~result+1); 
     }
     else { 
-      result = frac << t;
+      result = frac >> t;
       return (sign == 0 ? result : ~result+1);
     }
   }
@@ -368,10 +370,13 @@ int floatFloat2Int(unsigned uf) {
  */
 unsigned floatPower2(int x) {
   int t = x + 126;
-  if (t < 0) 
-      return 0x00080000 >> (~t+1);
+  if (t < 0)
+      if (t < -50)
+          return 0;
+      else
+          return 0x00800000 >> (~t+1);
   else if (t < 254)
-    return 0x00080000 + (t << 23); 
+    return 0x00800000 + (t << 23);
   else 
-    return 0x7FF80000;
+    return 0x7F800000;
 }
