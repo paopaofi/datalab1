@@ -267,40 +267,41 @@ int logicalNeg(int x) {
  */
 int howManyBits(int x) {
     int numbits = x^(x >> 1);
-    int num;
-    num = !numbits;
-    num += !(numbits >> 1);
-    num += !(numbits >> 2);
-    num += !(numbits >> 3);
-    num += !(numbits >> 4);
-    num += !(numbits >> 5);
-    num += !(numbits >> 6);
-    num += !(numbits >> 7);
-    num += !(numbits >> 8);
-    num += !(numbits >> 9);
-    num += !(numbits >> 10);
-    num += !(numbits >> 11);
-    num += !(numbits >> 12);
-    num += !(numbits >> 13);
-    num += !(numbits >> 14);
-    num += !(numbits >> 15);
-    num += !(numbits >> 16);
-    num += !(numbits >> 17);
-    num += !(numbits >> 18);
-    num += !(numbits >> 19);
-    num += !(numbits >> 20);
-    num += !(numbits >> 21);
-    num += !(numbits >> 22);
-    num += !(numbits >> 23);
-    num += !(numbits >> 24);
-    num += !(numbits >> 25);
-    num += !(numbits >> 26);
-    num += !(numbits >> 27);
-    num += !(numbits >> 28);
-    num += !(numbits >> 29);
-    num += !(numbits >> 30);
-    num += !(numbits >> 31);
-    return 34 + ~num;
+    int condsn, num;
+    int t = ~0;
+    int bits = 0;
+    
+    condsn = !!(numbits & (t << 16));
+    num = (condsn << 4);
+    numbits >>= num;
+    bits += num;
+    
+    condsn = !!(numbits & (t << 8));
+    num = (condsn << 3);
+    numbits >>= num;
+    bits += num;
+    
+    condsn = !!(numbits & (t << 4));
+    num = (condsn << 2);
+    numbits >>= num;
+    bits += num;
+    
+    condsn = !!(numbits & (t << 2));
+    num = (condsn << 1);
+    numbits >>= num;
+    bits += num;
+    
+    condsn = !!(numbits & (t << 1));
+    num = condsn;
+    numbits >>= num;
+    bits += num;
+    
+    condsn = !!(numbits & t);
+    num = condsn;
+    numbits >>= num;
+    bits += num;
+    
+    return bits + 1;
 }
 //float
 /* 
