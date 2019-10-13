@@ -266,39 +266,41 @@ int logicalNeg(int x) {
  *  Rating: 4
  */
 int howManyBits(int x) {
-  int numbits = x^(x >> 1);
-  return 1 + !!numbits 
-          + !!(numbits >> 1)
-          + !!(numbits >> 2)
-          + !!(numbits >> 3)
-          + !!(numbits >> 4)
-          + !!(numbits >> 5)
-          + !!(numbits >> 6)
-          + !!(numbits >> 7)
-          + !!(numbits >> 8)
-          + !!(numbits >> 9)
-          + !!(numbits >> 10)
-          + !!(numbits >> 11)
-          + !!(numbits >> 12)
-          + !!(numbits >> 13)
-          + !!(numbits >> 14)
-          + !!(numbits >> 15)
-          + !!(numbits >> 16)
-          + !!(numbits >> 17)
-          + !!(numbits >> 18)
-          + !!(numbits >> 19)
-          + !!(numbits >> 20)
-          + !!(numbits >> 21)
-          + !!(numbits >> 22)
-          + !!(numbits >> 23)
-          + !!(numbits >> 24)
-          + !!(numbits >> 25)
-          + !!(numbits >> 26)
-          + !!(numbits >> 27)
-          + !!(numbits >> 28)
-          + !!(numbits >> 29)
-          + !!(numbits >> 30)
-          + !!(numbits >> 31);
+    int numbits = x^(x >> 1);
+    int num;
+    num = !numbits;
+    num += !(numbits >> 1);
+    num += !(numbits >> 2);
+    num += !(numbits >> 3);
+    num += !(numbits >> 4);
+    num += !(numbits >> 5);
+    num += !(numbits >> 6);
+    num += !(numbits >> 7);
+    num += !(numbits >> 8);
+    num += !(numbits >> 9);
+    num += !(numbits >> 10);
+    num += !(numbits >> 11);
+    num += !(numbits >> 12);
+    num += !(numbits >> 13);
+    num += !(numbits >> 14);
+    num += !(numbits >> 15);
+    num += !(numbits >> 16);
+    num += !(numbits >> 17);
+    num += !(numbits >> 18);
+    num += !(numbits >> 19);
+    num += !(numbits >> 20);
+    num += !(numbits >> 21);
+    num += !(numbits >> 22);
+    num += !(numbits >> 23);
+    num += !(numbits >> 24);
+    num += !(numbits >> 25);
+    num += !(numbits >> 26);
+    num += !(numbits >> 27);
+    num += !(numbits >> 28);
+    num += !(numbits >> 29);
+    num += !(numbits >> 30);
+    num += !(numbits >> 31);
+    return 34 + ~num;
 }
 //float
 /* 
