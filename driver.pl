@@ -92,7 +92,7 @@ if ($opt_h) {
 
 # The default input file is bits.c (change with -f)
 $infile = "bits.c";
-$nickname = "";
+$nickname = "16307110153";
 
 #####
 # These are command line args that every driver must support
